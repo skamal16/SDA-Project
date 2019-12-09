@@ -45,9 +45,4 @@ if(isset($_POST["sendMessageButton"])){
 else{
 	echo "button not pressed";
 }
-
-
-
-
-
 ?>
