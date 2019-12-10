@@ -6,6 +6,8 @@ if(isset($_POST["sendMessageButton"])){
 	$email = $_POST["email"];
 	$password = $_POST["password"];
 
+	session_start();
+
 
 
 	$email = trim($email);
@@ -34,7 +36,18 @@ if(isset($_POST["sendMessageButton"])){
 	echo "Results".$row;
 
 	if ($row['email'] == $email && $row['password'] == $password) {
-		echo "Login success!!!".$row['email'];
+		echo "Login success!!!".$row['type'];
+		$_SESSION["fname"] = $row['fname'];
+		$_SESSION["lname"] = $row['lname'];
+
+
+		if($row['type'] == "Student"){
+			header("Location: student.php");
+		}
+		else{
+			header("Location: teacher.html");
+		}
+		//header("Location: student.html");
 		# code...
 	}
 	else{
@@ -45,4 +58,9 @@ if(isset($_POST["sendMessageButton"])){
 else{
 	echo "button not pressed";
 }
+
+
+
+
+
 ?>
