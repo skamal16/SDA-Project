@@ -45,7 +45,7 @@ if(isset($_POST["sendMessageButton"])){
 			header("Location: student.php");
 		}
 		else{
-			header("Location: teacher.html");
+			header("Location: teacher.php");
 		}
 		//header("Location: student.html");
 		# code...
