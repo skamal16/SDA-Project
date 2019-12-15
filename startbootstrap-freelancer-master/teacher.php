@@ -317,7 +317,7 @@ session_start();
               <div class="showback" >
                 <h1>Welcome Teacher!!!</h1>
                 <p>
-                <button type="button" class="btn btn-primary btn-lg">Upload Video</button>
+                <a href="videos.html"><button type="button" class="btn btn-primary btn-lg" >Upload Video</button></a> 
               </p>
               </div>
               
