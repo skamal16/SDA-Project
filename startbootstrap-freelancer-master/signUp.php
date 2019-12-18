@@ -1,8 +1,6 @@
 <?php
 echo "php working";
 
-
-
 if(isset($_POST["sendMessageButton"])){
 	$type = $_POST["gender"];
 	$fname = $_POST["first_name"];
@@ -46,13 +44,20 @@ if(isset($_POST["sendMessageButton"])){
 	} else {
     echo "Error: " . $sql . "<br>" . mysqli_error($conn);
 	}
+
+	if($type == "Teacher"){
+		$sql = "INSERT INTO teacher_video (teacher_name, video_names) VALUES ('$fname $lname', '0 ')";
+	} else if($type == "Student"){
+		$sql = "INSERT INTO student_notification (student_name, new_videos) VALUES ('$fname $lname', '0 ');";
+	}
+
+	if (mysqli_query($conn, $sql)) {
+		echo "Video info record created successfully";
+		} else {
+		echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+		}
 }
 else{
 	echo "button not pressed";
 }
-
-
-
-
-
 ?>

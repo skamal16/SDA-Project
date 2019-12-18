@@ -1,5 +1,7 @@
 <?php
-	
+
+//UPLOADING FILES
+
 $title = $_POST["title"];
 
 $title = trim($title);
@@ -7,6 +9,7 @@ $title = trim($title);
 $target_dir = "video_uploads/";
 $uploadOk = 1;
 $target_file = $target_dir . basename($_FILES["video"]["name"]);
+
 $videoFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
 
 if (file_exists($target_file)) {
@@ -29,6 +32,103 @@ if ($uploadOk == 0) {
 		echo "Sorry, there was an error uploading your file.";
 	}
 }
+
+//UPDATING STUDENT NOTIFICATIONS
+
+$server = "localhost";
+$userName = "root";
+$pass = "";
+$db = "sda_final_project";
+
+$conn = mysqli_connect($server, $userName, $pass, $db);
+
+if (!$conn) {
+	die("Connection failed: " . mysqli_connect_error());
+}
+echo "Connected successfully";
+
+$sql = "SELECT * FROM student_notification";
+
+$raw = $conn->query($sql);
+
+while ($student = $raw->fetch_assoc()){
+	echo $student["student_name"];
+	$videos = explode(" ", $student["new_videos"]);
+	$num_of_videos = $videos[0];
+
+	$video_string = "";
+	foreach (array_slice($videos, 1) as $video){
+		if($video == $title) $title = false;
+		$video_string = $video_string.$video." ";
+	}
+
+	if ($title != false) {
+		$num_of_videos++;
+		$video_string = $video_string." ".$title;
+	}
+
+	$video_string = $num_of_videos." ".$video_string;
+
+	$name = $student["student_name"];
+
+	$sql = "UPDATE student_notification SET new_videos = '$video_string' WHERE student_name = '$name'";
+
+	$conn->query($sql);
+}
+
+echo "student notifactions updating complete";
+
+//UPDATING TEACHER VIDEOS
+session_start();
+
+echo $_SESSION["fname"];
+
+$server = "localhost";
+$userName = "root";
+$pass = "";
+$db = "sda_final_project";
+
+$conn = mysqli_connect($server, $userName, $pass, $db);
+
+if (!$conn) {
+	die("Connection failed: " . mysqli_connect_error());
+}
+echo "Connected successfully";
+
+$fname = $_SESSION["fname"];
+$lname = $_SESSION["lname"];
+
+$sql = "SELECT video_names FROM teacher_video WHERE teacher_name = '$fname $lname'";
+
+$raw = $conn->query($sql);
+$result = $raw->fetch_assoc();
+
+$videos = explode(" ", $result["video_names"]);
+
+$num_of_videos = $videos[0];
+
+$video_string = "";
+foreach (array_slice($videos, 1) as $video){
+	if($video == $title) $title = false;
+	$video_string = $video_string.$video." ";
+}
+
+if ($title != false) {
+	$num_of_videos++;
+	$video_string = $video_string." ".$title;
+}
+
+$video_string = $num_of_videos." ".$video_string;
+
+$sql = "UPDATE teacher_video SET video_names = '$video_string' WHERE teacher_name = '$fname $lname'";
+
+if ($conn->query($sql)) {
+    echo "teacher videos updated successfully";
+	} else {
+    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+	}
+
+//LOADING ALL VIDEOS IN DIRECTORY
 
 $videoW = 320;
 $videoH = 240;
