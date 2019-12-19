@@ -1,5 +1,16 @@
 <?php
 
+$server = "localhost";
+$userName = "root";
+$pass = "";
+$db = "sda_final_project";
+
+$conn = mysqli_connect($server, $userName, $pass, $db);
+
+if (!$conn) {
+	die("Connection failed: " . mysqli_connect_error());
+}
+
 //UPLOADING FILES
 
 $title = $_POST["title"];
@@ -33,67 +44,60 @@ if ($uploadOk == 0) {
 	}
 }
 
-//UPDATING STUDENT NOTIFICATIONS
+class Notifications_Publisher{
+	public $subscribers;
 
-$server = "localhost";
-$userName = "root";
-$pass = "";
-$db = "sda_final_project";
-
-$conn = mysqli_connect($server, $userName, $pass, $db);
-
-if (!$conn) {
-	die("Connection failed: " . mysqli_connect_error());
-}
-echo "Connected successfully";
-
-$sql = "SELECT * FROM student_notification";
-
-$raw = $conn->query($sql);
-
-while ($student = $raw->fetch_assoc()){
-	echo $student["student_name"];
-	$videos = explode(" ", $student["new_videos"]);
-	$num_of_videos = $videos[0];
-
-	$video_string = "";
-	foreach (array_slice($videos, 1) as $video){
-		if($video == $title) $title = false;
-		$video_string = $video_string.$video." ";
+	function __construct(){
+		$this->subscribers = [];
+	}
+	
+	function subscribe($subscriber){
+		array_push($this->subscribers, $subscriber);
 	}
 
-	if ($title != false) {
-		$num_of_videos++;
-		$video_string = $video_string." ".$title;
+	function update_notifications($conn, $new_video){
+		foreach($this->subscribers as $subscriber){
+			$subscriber->update($conn, $new_video);
+		}
 	}
-
-	$video_string = $num_of_videos." ".$video_string;
-
-	$name = $student["student_name"];
-
-	$sql = "UPDATE student_notification SET new_videos = '$video_string' WHERE student_name = '$name'";
-
-	$conn->query($sql);
 }
 
-echo "student notifactions updating complete";
+class Student_Subscriber{
+	public $name;
+	public $new_videos;
+
+	function __construct($name, $new_videos){
+		$this->name = $name;
+		$this->new_videos = $new_videos;
+	}
+
+	function update($conn, $new_video){
+		
+		$videos = explode(" ", $this->new_videos);
+
+		$num_of_videos = $videos[0];
+
+		$video_string = "";
+		foreach (array_slice($videos, 1) as $video){
+			if($video == $new_video) $new_video = false;
+			$video_string = $video_string.$video." ";
+		}
+
+		if ($new_video != false) {
+			$num_of_videos++;
+			$video_string = $video_string." ".$new_video;
+		}
+
+		$video_string = $num_of_videos." ".$video_string;
+
+		$sql = "UPDATE student_notification SET new_videos = '$video_string' WHERE student_name = '$this->name'";
+
+		$conn->query($sql);
+	}
+}
 
 //UPDATING TEACHER VIDEOS
 session_start();
-
-echo $_SESSION["fname"];
-
-$server = "localhost";
-$userName = "root";
-$pass = "";
-$db = "sda_final_project";
-
-$conn = mysqli_connect($server, $userName, $pass, $db);
-
-if (!$conn) {
-	die("Connection failed: " . mysqli_connect_error());
-}
-echo "Connected successfully";
 
 $fname = $_SESSION["fname"];
 $lname = $_SESSION["lname"];
@@ -122,11 +126,26 @@ $video_string = $num_of_videos." ".$video_string;
 
 $sql = "UPDATE teacher_video SET video_names = '$video_string' WHERE teacher_name = '$fname $lname'";
 
-if ($conn->query($sql)) {
-    echo "teacher videos updated successfully";
-	} else {
-    echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-	}
+$conn->query($sql);
+
+//UPDATING STUDENT NOTIFICATIONS
+
+$sql = "SELECT * FROM student_notification";
+
+$raw = $conn->query($sql);
+
+$publisher = new Notifications_Publisher();
+
+while ($student = $raw->fetch_assoc()){
+
+	$name = $student["student_name"];
+	$new_videos = $student["new_videos"];
+
+	$subscriber = new Student_Subscriber($name, $new_videos);
+	$publisher->subscribe($subscriber);
+}
+
+$publisher->update_notifications($conn, $title);
 
 //LOADING ALL VIDEOS IN DIRECTORY
 
