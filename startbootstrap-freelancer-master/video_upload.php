@@ -62,8 +62,6 @@ class Notifications_Publisher{
 	}
 }
 
-
-
 class Student_Subscriber{
 	public $name;
 	public $new_videos;
