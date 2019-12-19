@@ -253,50 +253,29 @@ session_start();
           ?>
           <h5 class="centered"></h5>
           <li class="mt">
-            <a class="active" href="index.html">
+            <a class="active" href="homepageLogin.html">
               <i class="fa fa-dashboard"></i>
               <span>Dashboard</span>
               </a>
           </li>
           <li class="sub-menu">
-            <a href="javascript:;">
+            <a href="homepageLogin.html#portfolio">
               <i class="fa fa-desktop"></i>
               <span>Ideas</span>
               </a>
-            <ul class="sub">
-              <li><a href="general.html">information represented as digital form</a></li>
-              <li><a href="buttons.html">Buttons</a></li>
-              <li><a href="panels.html">Panels</a></li>
-              <li><a href="font_awesome.html">Font Awesome</a></li>
-            </ul>
           </li>
           <li class="sub-menu">
-            <a href="javascript:;">
+            <a href="homepageLogin.html#about">
               <i class="fa fa-cogs"></i>
               <span>Prepared By</span>
               </a>
-            <ul class="sub">
-              <li><a href="grids.html">Grids</a></li>
-              <li><a href="calendar.html">Calendar</a></li>
-              <li><a href="gallery.html">Gallery</a></li>
-              <li><a href="todo_list.html">Todo List</a></li>
-              <li><a href="dropzone.html">Dropzone File Upload</a></li>
-              <li><a href="inline_editor.html">Inline Editor</a></li>
-              <li><a href="file_upload.html">Multiple File Upload</a></li>
-            </ul>
           </li>
           
           <li class="sub-menu">
-            <a href="javascript:;">
+            <a href="homepageLogin.html#about">
               <i class="fa fa-tasks"></i>
               <span>About Us</span>
               </a>
-            <ul class="sub">
-              <li><a href="form_component.html">Form Components</a></li>
-              <li><a href="advanced_form_components.html">Advanced Components</a></li>
-              <li><a href="form_validation.html">Form Validation</a></li>
-              <li><a href="contactform.html">Contact Form</a></li>
-            </ul>
           </li>
           <li>
             <a href="google_maps.html">

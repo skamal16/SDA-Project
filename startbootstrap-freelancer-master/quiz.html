@@ -20,9 +20,7 @@
   <link href="css/freelancer.min.css" rel="stylesheet">
 
   <style>
-    #hintDiv {
-      display: none;
-    }
+    
 
     p {
       font-size: 20px;
@@ -117,7 +115,6 @@
               <br>
               <div id="success"></div>
               <div class="form-group text-center">
-                <input type="submit" name="hint" class="btn btn-primary btn-xl" id="hint" onclick="showHint()" value="hide/show" >
                 <input type="submit" name="submit" class="btn btn-primary btn-xl" id="submitQuiz">
               </div>
               </form>
@@ -218,15 +215,15 @@ function pad(val) {
   }
 }
 
-function showHint() {
-  var h =  document.getElementById("hintDiv");
-  if (h.style.display === "none") {
-    h.style.display = "block";
-  } 
-  else {
-    h.style.display = "none";
-  }
-}
+// function showHint() {
+//   var h =  document.getElementById("hintDiv");
+//   if (h.style.display === "none") {
+//     h.style.display = "block";
+//   } 
+//   else {
+//     h.style.display = "none";
+//   }
+// }
 
 </script>
 </html>

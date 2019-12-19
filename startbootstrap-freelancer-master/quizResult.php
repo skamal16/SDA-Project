@@ -1,5 +1,9 @@
 <?php
 
+if (isset($_POST['submit'])) {
+    # code...
+
+
 	$server = "localhost";
 	$userName = "root";
 	$pass = "";
@@ -91,4 +95,5 @@
 	else {
     echo "Error: " . $sql . "<br>" . mysqli_error($conn);
 	}
+}
 ?>
