@@ -193,40 +193,50 @@ session_start();
               </a>
             <ul class="dropdown-menu extended notification">
               <div class="notify-arrow notify-arrow-yellow"></div>
-              <li>
-                <p class="yellow">You have 7 new notifications</p>
-              </li>
-              <li>
-                <a href="index.html#">
-                  <span class="label label-danger"><i class="fa fa-bolt"></i></span>
-                  Server Overloaded.
-                  <span class="small italic">4 mins.</span>
-                  </a>
-              </li>
-              <li>
-                <a href="index.html#">
-                  <span class="label label-warning"><i class="fa fa-bell"></i></span>
-                  Memory #2 Not Responding.
-                  <span class="small italic">30 mins.</span>
-                  </a>
-              </li>
-              <li>
-                <a href="index.html#">
-                  <span class="label label-danger"><i class="fa fa-bolt"></i></span>
-                  Disk Space Reached 85%.
-                  <span class="small italic">2 hrs.</span>
-                  </a>
-              </li>
-              <li>
-                <a href="index.html#">
-                  <span class="label label-success"><i class="fa fa-plus"></i></span>
-                  New User Registered.
-                  <span class="small italic">3 hrs.</span>
-                  </a>
-              </li>
-              <li>
-                <a href="index.html#">See all notifications</a>
-              </li>
+              <?php
+        //UPDATING STUDENT NOTIFICATIONS
+
+        $fname = $_SESSION["fname"];
+        $lname = $_SESSION["lname"];
+
+        $server = "localhost";
+        $userName = "root";
+        $pass = "";
+        $db = "sda_final_project";
+
+        $conn = mysqli_connect($server, $userName, $pass, $db);
+
+        if (!$conn) {
+          die("Connection failed: " . mysqli_connect_error());
+        }
+        
+        $sql = "SELECT new_videos FROM student_notification WHERE student_name = '$fname $lname'";
+        
+        $raw = $conn->query($sql);
+        $result = $raw->fetch_assoc();
+        
+        $videos = explode(" ", $result["new_videos"]);
+
+        $num_of_videos = $videos[0];
+
+        $video_string = "0 ";
+
+        $sql = "UPDATE student_notification SET new_videos = '$video_string' WHERE student_name = '$fname $lname'";
+
+        $conn->query($sql);
+
+        echo "<li><p class='yellow'>You have $num_of_videos new notifications</p></li>";
+
+        if ($num_of_videos != "0"){
+          foreach (array_slice($videos, 1) as $video){
+            if($video != ""){
+              echo "<li>Teacher uploaded a new video called $video.</li>";
+            }
+          }
+        } else{
+          echo "<li>No new videos uploaded</li>";
+        }
+      ?>
             </ul>
           </li>
           <!-- notification dropdown end -->
@@ -378,7 +388,6 @@ session_start();
     top: 100px;
     left: 250px;
     width: 1000px;
-
   }
   
 </style>
