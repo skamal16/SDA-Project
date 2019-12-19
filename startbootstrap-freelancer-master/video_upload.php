@@ -62,7 +62,11 @@ class Notifications_Publisher{
 	}
 }
 
-class Student_Subscriber{
+interface Subscriber{
+	function update($conn, $new_video);
+}
+
+class Student_Subscriber implements Subscriber{
 	public $name;
 	public $new_videos;
 
